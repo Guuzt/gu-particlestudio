@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  @font-face {
+    font-family: 'crock';
+    src: url(fonts/crock.ttf) format('truetype');
+  }
+  @font-face {
+    font-family: 'HapnaSlabSerif';
+    src: url(fonts/HapnaSlabSerif-Medium.ttf) format('truetype');
+  }
+  @font-face {
+    font-family: 'chineserocks';
+    src: url(fonts/chineserocks.ttf) format('truetype');
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: transparent;
+    overflow: hidden;
+    font-family: 'HapnaSlabSerif', serif;
+    user-select: none;
+  }
+
+  /* ── Menu ─────────────────────────────────── */
+  #menu {
+    position: fixed;
+    left: 2vw;
+    top: 50%;
+    transform: translateY(-50%);
+    width: clamp(430px, 27vw, 580px);
+    max-height: 90vh;
+    color: #fff;
+    padding: 1.4rem 0.6rem 0.8rem;
+    background: url(images/inkroller_1a.png) center/100% 100% no-repeat;
+    display: none;
+    flex-direction: column;
+    animation: fadeIn 0.25s ease-in-out;
+  }
+  #menu.visible { display: flex; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-50%) scale(0.96); }
+    to   { opacity: 1; transform: translateY(-50%) scale(1); }
+  }
+
+  .menu-header {
+    position: relative;
+    text-align: center;
+    min-height: 5.2rem;
+    background: url(images/menu_header_1a.png) center/92% 100% no-repeat;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 3rem;
+    margin-bottom: 0.4rem;
+  }
+  #menu-title {
+    font-family: 'crock', serif;
+    font-weight: 300;
+    font-size: 2.1rem;
+    color: #fff;
+    line-height: 1.05;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .menu-nav, #menu-close {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 2.3rem; height: 2.3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: monospace;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: rgba(255, 255, 255, 0.75);
+    cursor: pointer;
+  }
+  .menu-nav { left: 0.6rem; display: none; }
+  .menu-nav.visible { display: flex; }
+  .menu-nav:hover, #menu-close:hover { color: #fff; text-shadow: 0 0 8px rgba(255,255,255,0.6); }
+  #menu-close { right: 0.6rem; font-size: 1.15rem; }
+
+  #menu-subtext {
+    font-family: 'crock', serif;
+    font-size: 1rem;
+    color: #fff;
+    opacity: 0.9;
+    text-align: center;
+    width: 90%;
+    margin: 0 auto 0.5rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .topline {
+    display: block;
+    width: 90%;
+    height: 0.25rem;
+    margin: 0 auto 0.4rem;
+    background: url(images/divider_line.png) center/100% 100% no-repeat;
+    opacity: 0.6;
+    flex-shrink: 0;
+  }
+
+  .menu-search { width: 87%; margin: 0 auto 0.45rem; display: none; flex-shrink: 0; }
+  .menu-search.visible { display: block; }
+  #menu-search-input {
+    width: 100%;
+    padding: 0.45rem 0.7rem;
+    font-size: 1rem;
+    font-family: 'HapnaSlabSerif', serif;
+    background: rgba(0, 0, 0, 0.45);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 2px;
+    color: #fff;
+    outline: none;
+    user-select: text;
+  }
+  #menu-search-input::placeholder { color: rgba(255, 255, 255, 0.45); }
+  #menu-search-input:focus { border-color: rgba(255, 255, 255, 0.55); }
+
+  #menu-items {
+    overflow-y: auto;
+    min-height: 12vh;
+    max-height: 56vh;
+    padding: 0 0 0.3rem;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  #menu-items::-webkit-scrollbar { display: none; }
+
+  .item {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 87%;
+    min-height: 2.9rem;
+    padding: 0.5rem 0.85rem;
+    margin: 0.4rem auto 0;
+    background: url(images/selection_box_bg_1d.png) center/100% 97% no-repeat;
+    color: #fff;
+  }
+  .item.clickable { cursor: pointer; }
+  .item.clickable:hover {
+    background-image: url(images/selsected.png), url(images/selection_box_bg_1d.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100% 100%;
+  }
+  .item-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.6rem;
+  }
+  .item-label {
+    font-family: 'HapnaSlabSerif', serif;
+    font-size: 1.15rem;
+    font-weight: 500;
+    color: #fff;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .item-desc {
+    font-size: 0.85rem;
+    color: #d1bfa0;
+    line-height: 1.35;
+    margin-top: 0.15rem;
+  }
+  .chev {
+    font-family: monospace;
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #fff;
+    opacity: 0.85;
+    flex-shrink: 0;
+  }
+  .item-value {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #fff;
+    flex-shrink: 0;
+  }
+
+  .item input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 6px;
+    margin-top: 0.55rem;
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid #b5a894;
+    outline: none;
+    cursor: pointer;
+  }
+  .item input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px; height: 18px;
+    border-radius: 2px;
+    background: #fff;
+    cursor: pointer;
+  }
+  .item input[type="number"] {
+    width: 7rem;
+    padding: 0.4rem 0.55rem;
+    font-size: 1rem;
+    font-family: 'HapnaSlabSerif', serif;
+    text-align: right;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid #5a4a3a;
+    border-radius: 2px;
+    color: #fff;
+    outline: none;
+    user-select: text;
+    flex-shrink: 0;
+  }
+  .item input[type="number"]:focus { border-color: #b5a894; }
+
+  .menu-empty {
+    padding: 1.6rem 0.8rem;
+    text-align: center;
+    font-family: 'crock', serif;
+    font-size: 1.15rem;
+    color: #d1bfa0;
+  }
+
+  .scrollbottom {
+    display: block;
+    width: 90%;
+    height: 3.4rem;
+    margin: -0.9rem auto 0;
+    background: url(images/scroller_right_bottom.png) center/100% 100% no-repeat;
+    opacity: 0.6;
+    flex-shrink: 0;
+    pointer-events: none;
+  }
+
+  .menu-footer {
+    text-align: center;
+    font-family: 'HapnaSlabSerif', serif;
+    font-size: 0.92rem;
+    color: #d1bfa0;
+    padding: 0.1rem 0.6rem 0.4rem;
+    display: flex;
+    justify-content: center;
+    gap: 1.8rem;
+    flex-shrink: 0;
+  }
+
+  /* ── Toasts ───────────────────────────────── */
+  #toasts {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 350px;
+    pointer-events: none;
+  }
+  .toast {
+    background: url(images/selection_box_bg_1d.png) center/100% 100% no-repeat,
+                rgba(12, 10, 8, 0.88);
+    padding: 0.85rem 1.05rem;
+    font-family: 'HapnaSlabSerif', serif;
+    font-size: 0.98rem;
+    color: #fff;
+    border-left: 3px solid #d1bfa0;
+    animation: toast-in 0.22s ease-out;
+  }
+  .toast.success { border-left-color: #a1e0a1; }
+  .toast.error   { border-left-color: #e74c3c; }
+  .toast.fade    { opacity: 0; transition: opacity 0.3s; }
+  @keyframes toast-in {
+    from { opacity: 0; transform: translateX(20px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+
+  /* ── Placement HUD ────────────────────────── */
+  #placer-hud {
+    display: none;
+    position: fixed;
+    bottom: 13%;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    pointer-events: none;
+    padding: 0.75rem 3rem 0.85rem;
+    background: linear-gradient(to right,
+      rgba(0, 0, 0, 0) 0%,
+      rgba(0, 0, 0, 0.68) 12%,
+      rgba(0, 0, 0, 0.68) 88%,
+      rgba(0, 0, 0, 0) 100%);
+  }
+  #placer-status {
+    font-family: 'chineserocks', serif;
+    font-size: 1.65rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #fff;
+    text-shadow: 1px 1px 2px #000, 0 0 10px rgba(0, 0, 0, 0.8);
+    margin-bottom: 0.5rem;
+  }
+  #placer-hint {
+    font-family: 'HapnaSlabSerif', serif;
+    font-size: 1.02rem;
+    color: #f1ece1;
+    text-shadow: 1px 1px 2px #000, 0 0 6px rgba(0, 0, 0, 0.9);
+  }
+</style>
+</head>
+<body>
+
+<div id="menu">
+  <div class="menu-header">
+    <div class="menu-nav" id="menu-back">&lt;</div>
+    <div id="menu-title"></div>
+    <div id="menu-close">✕</div>
+  </div>
+  <div id="menu-subtext"></div>
+  <div class="topline"></div>
+  <div class="menu-search" id="menu-search-wrap">
+    <input id="menu-search-input" type="text" autocomplete="off">
+  </div>
+  <div id="menu-items"></div>
+  <div class="scrollbottom"></div>
+  <div class="menu-footer">
+    <span>[⌫] Back</span>
+    <span>[ESC] Close</span>
+  </div>
+</div>
+
+<div id="toasts"></div>
+
+<div id="placer-hud">
+  <div id="placer-status"></div>
+  <div id="placer-hint"></div>
+</div>
+
+<script>
+  var RES = (typeof GetParentResourceName === 'function') ? GetParentResourceName() : 'gu-particlestudio';
+  var MAX_RENDER = 200;
+
+  var menuVisible = false;
+  var menuData    = null;
+  var sliderTimer = null;
+
+  function post(name, data) {
+    fetch('https://' + RES + '/' + name, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data || {})
+    });
+  }
+
+  function el(id) { return document.getElementById(id); }
+
+  function postSliderChange(index, value) {
+    if (sliderTimer) clearTimeout(sliderTimer);
+    sliderTimer = setTimeout(function() {
+      post('menuChange', { index: index, value: value });
+    }, 40);
+  }
+
+  function valueBadge(item) {
+    if (item.factor) {
+      return '×' + (item.value * item.factor).toFixed(1);
+    }
+    return String(item.value);
+  }
+
+  function buildItem(item, index) {
+    var div = document.createElement('div');
+    div.className = 'item';
+
+    if (item.type === 'slider') {
+      var row = document.createElement('div');
+      row.className = 'item-row';
+      var lbl = document.createElement('span');
+      lbl.className = 'item-label';
+      lbl.textContent = item.label;
+      var val = document.createElement('span');
+      val.className = 'item-value';
+      val.textContent = valueBadge(item);
+      row.appendChild(lbl);
+      row.appendChild(val);
+
+      var range = document.createElement('input');
+      range.type = 'range';
+      range.min = item.min;
+      range.max = item.max;
+      range.value = item.value;
+      range.addEventListener('input', function() {
+        var v = Number(range.value);
+        item.value = v;
+        val.textContent = valueBadge(item);
+        postSliderChange(index, v);
+      });
+
+      div.appendChild(row);
+      div.appendChild(range);
+
+    } else if (item.type === 'input') {
+      var row2 = document.createElement('div');
+      row2.className = 'item-row';
+      var lbl2 = document.createElement('span');
+      lbl2.className = 'item-label';
+      lbl2.textContent = item.label;
+      var inp = document.createElement('input');
+      inp.type = 'number';
+      if (item.min !== undefined) inp.min = item.min;
+      if (item.max !== undefined) inp.max = item.max;
+      inp.value = item.value;
+      inp.addEventListener('change', function() {
+        item.value = inp.value;
+        post('menuChange', { index: index, value: inp.value });
+      });
+      row2.appendChild(lbl2);
+      row2.appendChild(inp);
+      div.appendChild(row2);
+
+    } else {
+      div.classList.add('clickable');
+      var row3 = document.createElement('div');
+      row3.className = 'item-row';
+      var lbl3 = document.createElement('span');
+      lbl3.className = 'item-label';
+      lbl3.textContent = item.label;
+      row3.appendChild(lbl3);
+      if (item.type === 'submenu') {
+        var chev = document.createElement('span');
+        chev.className = 'chev';
+        chev.textContent = '>';
+        row3.appendChild(chev);
+      }
+      div.appendChild(row3);
+      if (item.desc) {
+        var desc = document.createElement('div');
+        desc.className = 'item-desc';
+        desc.textContent = item.desc;
+        div.appendChild(desc);
+      }
+      div.addEventListener('click', function() {
+        post('menuSelect', { index: index });
+      });
+    }
+
+    return div;
+  }
+
+  function renderList(filter) {
+    var container = el('menu-items');
+    container.innerHTML = '';
+    if (!menuData) return;
+
+    var term  = (filter || '').toLowerCase();
+    var shown = 0;
+
+    for (var i = 0; i < menuData.elements.length; i++) {
+      var item = menuData.elements[i];
+      if (term !== '') {
+        var hay = (item.label + ' ' + (item.desc || '')).toLowerCase();
+        if (hay.indexOf(term) === -1) continue;
+      }
+      container.appendChild(buildItem(item, i + 1));
+      shown++;
+      if (shown >= MAX_RENDER) break;
+    }
+
+    if (shown === 0) {
+      var empty = document.createElement('div');
+      empty.className = 'menu-empty';
+      empty.textContent = menuData.emptyText || 'No results.';
+      container.appendChild(empty);
+    }
+  }
+
+  function showToast(message, ntype, timer) {
+    var toast = document.createElement('div');
+    toast.className = 'toast ' + (ntype || 'info');
+    toast.textContent = message;
+    el('toasts').appendChild(toast);
+    setTimeout(function() {
+      toast.classList.add('fade');
+      setTimeout(function() { toast.remove(); }, 320);
+    }, timer || 5000);
+  }
+
+  window.addEventListener('message', function(e) {
+    var d = e.data;
+    if (!d || !d.action) return;
+
+    if (d.action === 'openMenu') {
+      menuData    = d.menu;
+      menuVisible = true;
+      el('menu-title').textContent   = menuData.title || '';
+      el('menu-subtext').textContent = menuData.subtext || '';
+      el('menu-subtext').style.display = menuData.subtext ? 'block' : 'none';
+      el('menu-back').classList.toggle('visible', !!menuData.canGoBack);
+      var searchWrap = el('menu-search-wrap');
+      searchWrap.classList.toggle('visible', !!menuData.searchable);
+      var searchInput = el('menu-search-input');
+      searchInput.value = '';
+      searchInput.placeholder = menuData.searchPlaceholder || '';
+      el('menu').classList.add('visible');
+      renderList('');
+
+    } else if (d.action === 'closeMenu') {
+      menuVisible = false;
+      menuData    = null;
+      el('menu').classList.remove('visible');
+
+    } else if (d.action === 'notify') {
+      showToast(d.message, d.ntype, d.timer);
+
+    } else if (d.action === 'placerHud') {
+      el('placer-status').textContent = d.status || '';
+      el('placer-hint').textContent   = d.hint || '';
+      el('placer-hud').style.display  = 'block';
+
+    } else if (d.action === 'hideHud') {
+      el('placer-hud').style.display = 'none';
+    }
+  });
+
+  el('menu-back').addEventListener('click', function() { post('menuBack'); });
+  el('menu-close').addEventListener('click', function() { post('menuClose'); });
+  el('menu-search-input').addEventListener('input', function(e) { renderList(e.target.value); });
+
+  document.addEventListener('keydown', function(e) {
+    if (!menuVisible) return;
+    if (e.key === 'Escape') {
+      post('menuClose');
+    } else if (e.key === 'Backspace') {
+      var tag = document.activeElement ? document.activeElement.tagName : '';
+      if (tag !== 'INPUT') post('menuBack');
+    }
+  });
+</script>
+</body>
+</html>
