@@ -10,7 +10,6 @@ with live preview, free camera, height control and full sync between players.
 ![RedM](https://img.shields.io/badge/RedM-RDR3-b8281e?style=flat-square)
 ![Standalone](https://img.shields.io/badge/dependencies-none-2d7d46?style=flat-square)
 ![Frameworks](https://img.shields.io/badge/frameworks-RSG%20%7C%20VORP%20%7C%20standalone-8a6d3b?style=flat-square)
-![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)
 
 </div>
 
