@@ -20,7 +20,7 @@ with live preview, free camera, height control and full sync between players.
 ![preview](docs/preview.png)
 -->
 
-## ✨ Features
+## Features
 
 - **Full PTFX catalog** — browse every Looped and NonLooped particle dictionary in the game
 - **Global search** — find any effect by name across all dictionaries, with live filtering
@@ -34,7 +34,7 @@ with live preview, free camera, height control and full sync between players.
 - **Lua export** — print all placed effects as a ready-to-use Lua table (events, ambience, decoration, cinematics — whatever you need)
 - **RDR2-style UI** — custom NUI menu built with the game's own visual language; no menu library required
 
-## 🔌 Zero dependencies
+## No dependencies
 
 Everything is built in: menu, dialogs, notifications and HUD all run on the resource's own NUI.
 No btc-core, no ox_lib, no menu library — just drop it in and start the server.
@@ -42,7 +42,7 @@ No btc-core, no ox_lib, no menu library — just drop it in and start the server
 Works with **RSG**, **VORP**, or **fully standalone**. The framework is detected automatically at
 runtime; only the permission check adapts per framework.
 
-## 📦 Installation
+## Installation
 
 1. Drop the `gu-particlestudio` folder into your server's `resources` directory.
 2. Add to your `server.cfg`:
@@ -57,7 +57,7 @@ runtime; only the permission check adapts per framework.
 | **VORP** | Player's character `group` equals `admin` |
 | **Standalone** | ACE — add `add_ace group.admin admin allow` to `server.cfg` |
 
-## 🎮 Usage
+## Usage
 
 Open the studio with the chat command:
 
@@ -82,7 +82,7 @@ Open the studio with the chat command:
 Use **Export Positions** in the menu to print every placed effect to the F8 console as a
 Lua table — ready to paste into your own scripts.
 
-## ⚙️ Configuration
+## Configuration
 
 All options live in [`config/config.lua`](config/config.lua):
 
@@ -101,11 +101,8 @@ All options live in [`config/config.lua`](config/config.lua):
 Notifications use the built-in NUI toasts; swap the `Notify` function at the bottom of the
 config if you prefer your own notification system.
 
-## 🌍 Localization
+## Language 
 
 Ships with `eng` (default) and `pt-br`. Add your own language by extending
 [`locale.lua`](locale.lua) and setting `Config.Locale`.
 
-## 📄 License
-
-MIT — free to use, modify and redistribute.
